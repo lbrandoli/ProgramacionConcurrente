@@ -1,6 +1,6 @@
 import java.io.IOException;
 
-public class javaProcessTree {
+public class ArbolDeProcesos {
     static int cantHijosA = 2;
     static int cantHijosB = 2;
     static int cantHijosC = 1;
