@@ -41,10 +41,18 @@ def main():
     CS = suma_secuencial(A, B, N)
     CC = suma_concurrente(A, B, N)
 
-    print("Matriz A:\n", A)
-    print("Matriz B:\n", B)
-    print("Matriz resultado de la suma secuencial:\n", CS)
-    print("Matriz resultado de la suma concurrente:\n", CC)
+    print("Matriz A:")
+    for fila in A:
+        print(fila)
+    print("Matriz B:")
+    for fila in B:
+        print(fila)
+    print("Matriz resultado de la suma secuencial:")
+    for fila in CS:
+        print(fila)
+    print("Matriz resultado de la suma concurrente:")
+    for fila in CC:
+        print(fila)
 
     if (comparar_matrices(CS, CC, N)):
         print("\nAl comparar las matrices se determinó que son iguales")
