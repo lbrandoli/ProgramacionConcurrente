@@ -1,0 +1,1 @@
+La principal dificultad que tuvimos fue usar COLAB por primera vez ya que es una herramienta que no conocíamos y que nos pareció interesante de usar. Luego haciendo los ejercicios no encontramos demasiada dificultad ya que conocemos los lenguajes y contamos con cierta experiencia utilizandolos en diferentes trabajos, ya sea del mundo académico o del mundo laboral.

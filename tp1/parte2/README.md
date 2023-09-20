@@ -1,0 +1,1 @@
+Para realizar el trabajo no se presentó ninguna dificultad, pudimos resolverlo sin ningun problema con lo visto en clase y el conocimiento de cada uno.
