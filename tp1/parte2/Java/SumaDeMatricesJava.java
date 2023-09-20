@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class SumaDeMatricesJava
+public class SumaDeMatricesJava 
 {
 
     private static int FILS = 5;
@@ -10,10 +10,10 @@ public class SumaDeMatricesJava
     public static int maxNumero = 32;
     public static int minNumero = -32;
 
-    public int[][] matrizA = new int[FILS][COLS];
-    public int[][] matrizB = new int[FILS][COLS];
-    public int[][] matrizCS = new int[FILS][COLS];
-    public int[][] matrizCC = new int[FILS][COLS];
+    public int[][] matrizA;
+    public int[][] matrizB;
+    public int[][] matrizCS;
+    public int[][] matrizCC;
 
     public SumaDeMatricesJava()
     {
@@ -49,7 +49,6 @@ public class SumaDeMatricesJava
     public void sumaMatrizConcurrente()
     {
         List<SumaFilaThread> threads = new ArrayList<SumaFilaThread>();
-        SumaFilaThread.setSumaDeMatricesJava(this);
         for (int i = 0; i < SumaDeMatricesJava.FILS; i++)
         {
             threads.add(new SumaFilaThread(i));
@@ -63,7 +62,7 @@ public class SumaDeMatricesJava
             try
             {
                 sumaFilaThread.join();
-            }
+            } 
             catch (InterruptedException e)
             {
                 e.printStackTrace();
@@ -71,7 +70,7 @@ public class SumaDeMatricesJava
         }
     }
 
-    public static void mostrarMatriz(int[][] matriz, String nombre)
+    private static void mostrarMatriz(int[][] matriz, String nombre)
     {
         System.out.println("\nmatriz " + nombre);
         for (int i = 0; i < matriz.length; i++)
@@ -79,7 +78,7 @@ public class SumaDeMatricesJava
             System.out.print("[ ");
             for (int j = 0; j < matriz[0].length; j++)
             {
-              System.out.printf("%3d ", matriz[i][j]);
+              System.out.printf("%3d ", matriz[i][j]);      
             }
         System.out.println(" ]");
         }
@@ -87,17 +86,17 @@ public class SumaDeMatricesJava
 
 
     public void compararMatrices()
-    {
+    {    
       for(int i=0; i < SumaDeMatricesJava.FILS; i++)
         for(int j=0; j < SumaDeMatricesJava.COLS; j++)
         {
-          if(matrizCS[i][j] != matrizCC[i][j])
+          if(matrizCS[i][j] != matrizCC[i][j]) 
           {
-            System.out.println("\nlas matrices no son iguales en la posicion: (" + i + "; " + j + ")" );
+            System.out.println("\nlas matrices no son iguales en la posicion: (" + i + "; " + j + ")" );               
             return;
-          }
-        }
-      System.out.println("\nlas matrices CS y CC son iguales.");
+          }       
+        }  
+      System.out.println("\nlas matrices son iguales.");     
     }
 
     public static void main(String[] args)
@@ -113,28 +112,21 @@ public class SumaDeMatricesJava
         sumaDeMatrices.compararMatrices();
     }
 
-    public static class SumaFilaThread extends Thread
+    private class SumaFilaThread extends Thread
     {
-        public static SumaDeMatricesJava matrices = null;
         private int fila;
-
         public SumaFilaThread(int fila)
         {
             this.fila = fila;
         }
-
+        
         @Override
         public void run()
         {
-            for (int i = 0; i < matrices.matrizA[0].length; i++)
+            for (int i = 0; i < matrizA[0].length; i++)
             {
-                matrices.matrizCC[this.fila][i] = matrices.matrizA[this.fila][i] + matrices.matrizB[this.fila][i];
+                matrizCC[this.fila][i] = matrizA[this.fila][i] + matrizB[this.fila][i];
             }
-        }
-
-        public static void setSumaDeMatricesJava(SumaDeMatricesJava s)
-        {
-            SumaFilaThread.matrices = s;
         }
     }
 }
