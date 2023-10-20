@@ -1,0 +1,3 @@
+Si bien el ejercicio no es complejo, se pasó por alto el uso de atomic, entonces la suma no nos daba el resultado correcto y no entenidamos por qué ya que estaba todo bien.
+Luego de revisar muchas veces que es lo que estaba pasando y repasar el ejemplo del punto 1, nos dimos cuenta que en el ejercicio se utiliza atomic y ahi al agregar la instruccion nos dio el resultado correcto.
+Esto hace pensar en la importancia de utilizar atomic y como al hacer paralelismo o concurrencia hay que tener especial atencion a estas cosas, ya que por mas que el algoritmo este bien, pasar por alto esta instruccion genera incosistencias y arroja un resultado incorrecto.
