@@ -1,73 +1,72 @@
 import os
 import multiprocessing
 
-# Función que realiza el cálculo de estadísticas
-def calculate_statistics(words):
-    """
-    Calcula estadísticas sobre una lista de palabras.
+# Función para calcular estadísticas
+def calcular_estadisticas(palabras):
+    total_caracteres = 0
+    total_letras = 0
+    total_digitos = 0
+    palabra_mas_larga = ""
+    palabra_mas_corta = ""
 
-    :param words: Una lista de palabras para analizar.
-    :type words: list
-    :return: Una tupla con las estadísticas calculadas: 
-             (total_caracteres, total_letras, total_digitos, palabra_mas_larga, palabra_mas_corta)
-    :rtype: tuple
-    """
-    if not words:
-        return 0, 0, 0, '', ''
+    if not palabras:
+        return total_caracteres, total_letras, total_digitos, palabra_mas_larga, palabra_mas_corta
 
-    total_characters = sum(len(word) for word in words)
-    total_letters = sum(c.isalpha() for word in words for c in word)
-    total_digits = sum(c.isdigit() for word in words for c in word)
-    longest_word = max(words, key=len)
-    shortest_word = min(words, key=len)
+    for palabra in palabras:
+        total_caracteres += len(palabra)
+        total_letras += sum(c.isalpha() for c in palabra)
+        total_digitos += sum(c.isdigit() for c in palabra)
 
-    return total_characters, total_letters, total_digits, longest_word, shortest_word
+        if not palabra_mas_larga or len(palabra) > len(palabra_mas_larga):
+            palabra_mas_larga = palabra
+
+        if not palabra_mas_corta or len(palabra) < len(palabra_mas_corta):
+            palabra_mas_corta = palabra
+
+    return total_caracteres, total_letras, total_digitos, palabra_mas_larga, palabra_mas_corta
 
 
 # Función del proceso hijo
-def child_process(pipe):
-    """
-    Función que se ejecuta en el proceso hijo.
+def proceso_hijo(pipe):
+    palabras = []
 
-    :param pipe: La tubería de comunicación con el proceso padre.
-    :type pipe: multiprocessing.Pipe
-    """
-    words = []
     while True:
         word = pipe.recv()
         if word == "close":
             break
-        words.append(word)
-
-    statistics = calculate_statistics(words)
-    pipe.send(statistics)
+        palabras.append(word)
+    stats = calcular_estadisticas(palabras)
+    pipe.send(stats)
     pipe.close()
 
 
-if __name__ == "__main__":
-    parent_pipe, child_pipe = multiprocessing.Pipe()
+def run():
+    padre_pipe, hijo_pipe = multiprocessing.Pipe()
 
-    child_process = multiprocessing.Process(target = child_process, args=(child_pipe,))
-    child_process.start()
+    proceso = multiprocessing.Process(target=proceso_hijo, args=(hijo_pipe,))
+    proceso.start()
 
-    words = []
+    palabras = []
     while True:
-        word = input("Ingrese una palabra (o 'close' para finalizar): ")
-        if word == "close":
+        palabra = input("Ingrese una palabra (o 'close' para finalizar): ")
+        if palabra == "close":
             break
-        parent_pipe.send(word)
+        padre_pipe.send(palabra)
 
-    parent_pipe.send("close")
-    child_process.join()
+    padre_pipe.send("close")
+    proceso.join()
 
-    statistics = parent_pipe.recv()
-    parent_pipe.close()
+    estadisticas = padre_pipe.recv()
+    padre_pipe.close()
 
-    total_characters, total_letters, total_digits, longest_word, shortest_word = statistics
+    total_caracteres, total_letras, total_digitos, palabra_mas_larga, palabra_mas_corta = estadisticas
 
-    print(f"Total de caracteres: {total_characters}")
-    print(f"Total de letras: {total_letters}")
-    print(f"Total de dígitos: {total_digits}")
-    print(f"Palabra más larga: {longest_word}")
-    print(f"Palabra más corta: {shortest_word}")
+    print(f"Total de caracteres: {total_caracteres}")
+    print(f"Total de letras: {total_letras}")
+    print(f"Total de dígitos: {total_digitos}")
+    print(f"Palabra más larga: {palabra_mas_larga}")
+    print(f"Palabra más corta: {palabra_mas_corta}")
 
+
+if __name__ == "__main__":
+  run()
