@@ -31,7 +31,7 @@ def proceso_hijo(pipe):
     palabras = []
 
     while True:
-        word = pipe.recv()
+        word = pipe.recv()        
         if word == "close":
             break
         palabras.append(word)
