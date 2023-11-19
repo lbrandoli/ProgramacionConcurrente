@@ -1,7 +1,7 @@
 import socket
 import threading
 import tkinter as tk
-from tkinter import scrolledtext
+from tkinter import scrolledtext, ttk
 
 from crypto import cifrar_mensaje, descifrar_mensaje
 
@@ -19,15 +19,31 @@ class Cliente:
         self.ventana = ventana
         self.ventana.title("Cliente de Mensajes")
         self.ventana.protocol("WM_DELETE_WINDOW", self.cerrar_aplicacion)
+        self.ventana.configure(background='#F0F0F0')  # Color de fondo de la ventana
 
-        self.text_area = scrolledtext.ScrolledText(ventana, wrap=tk.WORD, width=40, height=10)
-        self.text_area.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+        # Estilo ttk para una apariencia más moderna
+        self.estilo = ttk.Style()
+        self.estilo.configure('TButton', padding=(10, 5, 10, 5), font=('Arial', 12))
+        self.estilo.configure('TEntry', font=('Arial', 10))
 
-        self.entry = tk.Entry(ventana, width=30)
-        self.entry.grid(row=1, column=0, padx=10, pady=10)
+        self.text_area = scrolledtext.ScrolledText(
+            ventana, wrap=tk.WORD, width=40, height=10, font=('Arial', 10))  # Color de fondo del área de texto
+        self.text_area.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
-        self.boton_enviar = tk.Button(ventana, text="Enviar Mensaje", command=self.enviar_mensaje)
-        self.boton_enviar.grid(row=1, column=1, padx=10, pady=10)
+        self.entry = ttk.Entry(
+            ventana, width=30, font=('Arial', 12), style='TEntry')  # Color de fondo del área de entrada
+        self.entry.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.boton_enviar = ttk.Button(
+            ventana, text="Enviar Mensaje", command=self.enviar_mensaje, style='TButton', cursor='hand2',
+            takefocus=False)  # Colores del botón
+        self.boton_enviar.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+
+        ## Configurar columnas y filas para expandirse
+        self.ventana.columnconfigure(0, weight=1)
+        self.ventana.columnconfigure(1, weight=1)
+        self.ventana.rowconfigure(0, weight=1)
+        self.ventana.rowconfigure(1, weight=1)
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.conectar()
@@ -53,9 +69,12 @@ class Cliente:
         :return: None
         """
         mensaje = self.entry.get()
+        self.text_area.insert(tk.END, f"You: {mensaje}\n")
+        self.text_area.yview(tk.END)
         # Cifrado del mensaje
         mensaje = cifrar_mensaje(mensaje, clave_general)
         # self.sock.send(mensaje.encode())
+
         self.sock.send(mensaje)
         if mensaje.lower() == "salir":
             self.sock.close()
@@ -78,13 +97,13 @@ class Cliente:
                 if not clave:
                     clave = True
                     clave_general = mensaje
-                if ":" in mensaje:
+                elif ":" in mensaje:
                     cabecera = mensaje.split(":")[0]
                     mensaje_cifrado = mensaje.split(":")[1].strip()
                     mensaje_cifrado = mensaje_cifrado.encode('latin-1')
 
                     mensaje_descifrado = descifrar_mensaje(mensaje_cifrado, clave_general)
-                    self.text_area.insert(tk.END, f"{cabecera}{mensaje_descifrado}\n")
+                    self.text_area.insert(tk.END, f"{cabecera}:{mensaje_descifrado}\n")
                     self.text_area.yview(tk.END)
                 else:
                     self.text_area.insert(tk.END, f"{mensaje}\n")
