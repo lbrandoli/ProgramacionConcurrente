@@ -10,6 +10,22 @@ clave_general = ""
 
 
 class Cliente:
+    # Constantes
+    VENTANA_TITULO = "Cliente de Mensajes"
+    BOTON_ENVIAR_TEXTO = "Enviar Mensaje"
+    COLOR_FONDO_TEXTO = 'white'
+    COLOR_FONDO_ENTRADA = 'white'
+    ESTILO_BOTON = 'TButton'
+    ESTILO_ENTRADA = 'TEntry'
+    FUENTE_BOTON = ('Arial', 12)
+    FUENTE_ENTRADA = ('Arial', 10)
+    FUENTE_TEXTO = ('Arial', 10)
+    PADX = 10
+    PADY = 10
+    ANCHO_TEXTO = 40
+    ALTURA_TEXTO = 10
+    ANCHO_ENTRADA = 30
+
     def __init__(self, ventana):
         """
         Inicializa la interfaz gráfica del cliente y establece la conexión con el servidor.
@@ -17,27 +33,27 @@ class Cliente:
         :param ventana: Objeto de la ventana de la aplicación Tkinter.
         """
         self.ventana = ventana
-        self.ventana.title("Cliente de Mensajes")
+        self.ventana.title(self.VENTANA_TITULO)
         self.ventana.protocol("WM_DELETE_WINDOW", self.cerrar_aplicacion)
-        self.ventana.configure(background='#F0F0F0')  # Color de fondo de la ventana
 
         # Estilo ttk para una apariencia más moderna
         self.estilo = ttk.Style()
-        self.estilo.configure('TButton', padding=(10, 5, 10, 5), font=('Arial', 12))
-        self.estilo.configure('TEntry', font=('Arial', 10))
+        self.estilo.configure(self.ESTILO_BOTON, padding=(10, 5, 10, 5), font=self.FUENTE_BOTON)
+        self.estilo.configure(self.ESTILO_ENTRADA, font=self.FUENTE_ENTRADA)
 
         self.text_area = scrolledtext.ScrolledText(
-            ventana, wrap=tk.WORD, width=40, height=10, font=('Arial', 10))  # Color de fondo del área de texto
-        self.text_area.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+            ventana, wrap=tk.WORD, width=self.ANCHO_TEXTO, height=self.ALTURA_TEXTO, font=self.FUENTE_TEXTO)  # Color de fondo del área de texto
+        self.text_area.grid(row=0, column=0, columnspan=2, padx=self.PADX, pady=self.PADY, sticky="nsew")
 
         self.entry = ttk.Entry(
-            ventana, width=30, font=('Arial', 12), style='TEntry')  # Color de fondo del área de entrada
-        self.entry.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+            ventana, width=self.ANCHO_ENTRADA, font=self.FUENTE_BOTON, style=self.ESTILO_ENTRADA
+            )  # Color de fondo del área de entrada
+        self.entry.grid(row=1, column=0, padx=self.PADX, pady=self.PADY, sticky="nsew")
 
         self.boton_enviar = ttk.Button(
-            ventana, text="Enviar Mensaje", command=self.enviar_mensaje, style='TButton', cursor='hand2',
-            takefocus=False)  # Colores del botón
-        self.boton_enviar.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+            ventana, text=self.BOTON_ENVIAR_TEXTO, command=self.enviar_mensaje, style=self.ESTILO_BOTON,
+            cursor='hand2', takefocus=False)  # Colores del botón
+        self.boton_enviar.grid(row=1, column=1, padx=self.PADX, pady=self.PADY, sticky="nsew")
 
         ## Configurar columnas y filas para expandirse
         self.ventana.columnconfigure(0, weight=1)

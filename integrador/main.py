@@ -1,19 +1,7 @@
 import subprocess
 import time
 
-def iniciar_servidor():
-    """
-    Inicia el servidor.
-    """
-    subprocess.run(["python", "servidor.py"])
-
-def iniciar_cliente():
-    """
-    Inicia un cliente.
-    """
-    subprocess.run(["python", "cliente.py"])
-
-if __name__ == "__main__":
+def run():
     # Iniciar el servidor como un proceso padre
     servidor_proceso = subprocess.Popen(["python", "servidor.py"])
 
@@ -30,3 +18,8 @@ if __name__ == "__main__":
 
     # Terminar el servidor después de que los clientes hayan terminado
     servidor_proceso.terminate()
+
+
+if __name__ == "__main__":
+    run()
+    
