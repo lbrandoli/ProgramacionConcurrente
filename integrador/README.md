@@ -42,4 +42,4 @@ Este proyecto implementa un sistema de mensajería cliente-servidor en Python ut
 
 ### Notas
 
-La funcion de encriptado esta en desarrollo .....
+
